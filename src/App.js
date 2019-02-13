@@ -1,28 +1,74 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+const db = [];
 class App extends Component {
+  constructor(props)
+  {
+    super(props);
+    this.state = {
+      movies: db,
+      filteredMovies: db
+    }
+  }
+  
+  componentDidMount() {
+    let page = 1;
+
+    while(page < 51){
+      fetch("https://api.themoviedb.org/3/movie/top_rated?page=" + page + "&language=en-US&api_key=9d59af51a07ce660e8606073f1dfe0ec")
+      .then(res => res.json())
+      .then(json => {
+        for(let i = 0; i < json["results"].length; i++)
+          db.push(json.results[i])
+        });
+
+      page++;
+    }
+
+    setTimeout(()=>{this.setState({movies: db})}, 1000);
+  }
+
+  filterMovies = (e) => {
+    const text = e.currentTarget.value;
+    const filteredMovies = this.getFilteredMovies(text);
+    this.setState({
+      filteredMovies
+    });
+  }
+
+  getFilteredMovies(text) {
+    return this.state.movies.filter( movie => 
+      movie.title.toLowerCase().includes(text.toLowerCase()))
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <input onInput={this.filterMovies}></input>
+        <MoviesList movies={this.state.filteredMovies} />
       </div>
     );
   }
+}
+
+const MoviesList = ({movies}) => {
+  const link = "https://image.tmdb.org/t/p/w185_and_h278_bestv2";
+  return (
+    <div className="cards">
+
+      {movies.map(movie => 
+        movie.vote_count > 2000 ?
+          <div className="item" key={movie.title}>
+            <img src={link + movie.poster_path} alt="" />
+            <p>{movie.title}</p>
+            <p>{movie.vote_count}</p>
+          </div> 
+        : null
+      )}
+
+    </div>
+  )
 }
 
 export default App;
