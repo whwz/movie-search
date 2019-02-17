@@ -53,13 +53,13 @@ class App extends Component {
     return (
       <div className="App">
         <input onInput={this.filterMovies} placeholder="Search..." />
-        {!this.state.isClicked ? <MoviesList filteredMovies={this.state.filteredMovies} movies={this.state.movies} click={this.handleClick} /> : <p>info</p>}
+        <MoviesList filteredMovies={this.state.filteredMovies} movies={this.state.movies} click={this.handleClick} clicked={this.state.isClicked} />
       </div>
     );
   }
 }
 
-const MoviesList = ({filteredMovies, movies, click}) => {
+const MoviesList = ({filteredMovies, movies, click, clicked}) => {
   const link = "https://image.tmdb.org/t/p/w185_and_h278_bestv2";
   return (
     movies.length ?
@@ -67,7 +67,7 @@ const MoviesList = ({filteredMovies, movies, click}) => {
         <div className="cards">
           {filteredMovies.map(movie => 
             <div className="item" key={movie.title}>
-              <img src={link + movie.poster_path} alt="" onClick={click} />
+              {!clicked ? <img src={link + movie.poster_path} alt="" onClick={click} /> : <p>{movie.overview}</p>}
               <p>{movie.title}</p>
             </div> 
           )}
