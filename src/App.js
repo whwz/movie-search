@@ -8,8 +8,7 @@ class App extends Component {
     super(props);
     this.state = {
       movies: db,
-      filteredMovies: db,
-      isClicked: false
+      filteredMovies: db
     }
   }
   
@@ -44,22 +43,17 @@ class App extends Component {
       movie.title.toLowerCase().includes(text.toLowerCase()))
   }
 
-  handleClick = () => {
-    this.setState({isClicked: true});
-    console.log("click");
-  }
-
   render() {
     return (
       <div className="App">
         <input onInput={this.filterMovies} placeholder="Search..." />
-        <MoviesList filteredMovies={this.state.filteredMovies} movies={this.state.movies} click={this.handleClick} clicked={this.state.isClicked} />
+        <MoviesList filteredMovies={this.state.filteredMovies} movies={this.state.movies} />
       </div>
     );
   }
 }
 
-const MoviesList = ({filteredMovies, movies, click, clicked}) => {
+const MoviesList = ({filteredMovies, movies}) => {
   const link = "https://image.tmdb.org/t/p/w185_and_h278_bestv2";
   return (
     movies.length ?
@@ -67,7 +61,7 @@ const MoviesList = ({filteredMovies, movies, click, clicked}) => {
         <div className="cards">
           {filteredMovies.map(movie => 
             <div className="item" key={movie.title}>
-              {!clicked ? <img src={link + movie.poster_path} alt="" onClick={click} /> : <p>{movie.overview}</p>}
+              <img src={link + movie.poster_path} alt="" />
               <p>{movie.title}</p>
             </div> 
           )}
