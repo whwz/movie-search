@@ -46,7 +46,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <input onInput={this.filterMovies} placeholder="Search..." />
+        <input onInput={this.filterMovies} placeholder="Search..." autoFocus={true} />
         <MoviesList filteredMovies={this.state.filteredMovies} movies={this.state.movies} />
       </div>
     );
